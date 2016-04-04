@@ -1,0 +1,9 @@
+---
+Name: statefulgridfield
+After:
+  - 'mysite/*'
+---
+
+LeftAndMain:
+  extra_requirements_javascript:
+    - statefulgridfield/javascript/GridFieldGridState.js
