@@ -98,6 +98,15 @@
                 this._super(e);
             }
         });
+
+        $('.ss-gridfield .filter-buttons button').entwine({
+            onclick: function(e) {
+                updateGridStateFiltering();
+
+                // execute parent/original actions
+                this._super(e);
+            }
+        });
     });
 
     var resetGridStateFiltering = function() {
