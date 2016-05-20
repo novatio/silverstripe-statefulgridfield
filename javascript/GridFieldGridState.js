@@ -23,15 +23,21 @@
                                     key === 'GridFieldFilterHeader' &&
                                     Object.keys(savedState[configKey][key]).length > 0
                                 ) {
-                                    this.filterState = 'show';
+                                    window.gridFieldFilterState = 'show';
                                 }
 
-                                $(this).setState(key, savedState[configKey][key]);
+                                this.setState(key, savedState[configKey][key]);
                             }, this);
 
-                            $(this).reload({
-                                data: [{ filter: this.filterState }]
-                            });
+                            setTimeout(function(){
+                                if(typeof window.gridFieldFilterState !== 'undefined') {
+                                    gridField.filterState = window.gridFieldFilterState;
+                                }
+
+                                gridField.reload({
+                                    data: [{ filter: gridField.filterState }]
+                                });
+                            }, 250);
                         }
                     } catch(err) {
                         // console.log(err);
@@ -136,10 +142,14 @@
             }
         });
 
-        updateGridState('GridFieldFilterHeader', gridFilter);
-
         // reset pagination @ gridstate
         resetGridStatePagination();
+
+        // update with new filtering
+        updateGridState('GridFieldFilterHeader', gridFilter);
+        if(typeof gridField !== 'undefined') {
+            gridField.setState('GridFieldFilterHeader', gridFilter);
+        }
     };
 
     // GridState Logic: Pagination
