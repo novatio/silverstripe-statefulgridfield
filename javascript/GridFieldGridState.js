@@ -105,9 +105,19 @@
             }
         });
 
-        $('.ss-gridfield .filter-buttons button').entwine({
+        $('.ss-gridfield .filter-buttons button.ss-gridfield-button-filter').entwine({
             onclick: function(e) {
                 updateGridStateFiltering();
+
+                // execute parent/original actions
+                this._super(e);
+            }
+        });
+
+        $('.ss-gridfield .filter-buttons button.ss-gridfield-button-close').entwine({
+            onclick: function(e) {
+                // reset gridstate
+                sessionStorage.GridState = JSON.stringify({});
 
                 // execute parent/original actions
                 this._super(e);
