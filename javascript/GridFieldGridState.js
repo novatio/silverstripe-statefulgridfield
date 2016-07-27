@@ -142,7 +142,23 @@
                         })
                         .get();
 
-                    updateGridState('GridFieldMultiSelect', checked);
+                    updateGridState('GridFieldMultiSelect', checked, true);
+                }
+            }
+        });
+        $('.ss-gridfield .multiselect-all').entwine({
+            onchange: function (e) {
+                this._super(e);
+
+                // only add extra logic if sessionStorage is supported by browser
+                if(typeof(Storage) !== "undefined") {
+                    var checked = this.closest('table').find('.multiselect:checked')
+                        .map(function() {
+                            return this.name;
+                        })
+                        .get();
+
+                    updateGridState('GridFieldMultiSelect', checked, true);
                 }
             }
         });
