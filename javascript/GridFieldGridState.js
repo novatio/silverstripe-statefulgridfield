@@ -19,9 +19,8 @@
                         if(savedState && configKey && typeof savedState[configKey] !== 'undefined') {
                             Object.keys(savedState[configKey]).forEach(function(key) {
                                 // toggle filter to show if key === GridFieldFilterHeader (user is filtering)
-                                if(
-                                    key === 'GridFieldFilterHeader' &&
-                                    Object.keys(savedState[configKey][key]).length > 0
+                                if (key === 'GridFieldFilterHeader'
+                                    && Object.keys(savedState[configKey][key]).length > 0
                                 ) {
                                     window.gridFieldFilterState = 'show';
                                 }
@@ -56,6 +55,12 @@
 
                         // add sortorder hook
                         updateGridStateSorting(savedState);
+
+                        /**
+                         * Extra logic for markguinn/silverstripe-gridfieldmultiselect
+                         * -> Toggle previously checked checkboxes
+                         */
+                        updateGridFieldMultiSelectState(savedState);
                     };
                 }
 
@@ -121,6 +126,24 @@
 
                 // execute parent/original actions
                 this._super(e);
+            }
+        });
+
+        /**
+         * Extra logic for markguinn/silverstripe-gridfieldmultiselect
+         */
+        $('.ss-gridfield td.col-checkbox input.multiselect').entwine({
+            onchange: function(e) {
+                // only add extra logic if sessionStorage is supported by browser
+                if(typeof(Storage) !== "undefined") {
+                    var checked = this.closest('table').find('.multiselect:checked')
+                        .map(function() {
+                            return this.name;
+                        })
+                        .get();
+
+                    updateGridState('GridFieldMultiSelect', checked);
+                }
             }
         });
     });
@@ -195,6 +218,23 @@
             }
         } catch (err) {
             // console.log(err);
+        }
+    };
+
+    /**
+     * Extra logic for markguinn/silverstripe-gridfieldmultiselect
+     * -> Toggle previously checked checkboxes
+     */
+    var updateGridFieldMultiSelectState = function(savedState) {
+        configKey = getConfigKey();
+
+        if (Object.keys(savedState[configKey]['GridFieldMultiSelect']).length > 0
+            && typeof savedState[configKey]['GridFieldMultiSelect'] !== 'undefined'
+        ) {
+            Object.keys(savedState[configKey]['GridFieldMultiSelect']).forEach(function(key) {
+                $('input[name="'+savedState[configKey]['GridFieldMultiSelect'][key]+'"]')
+                    .prop('checked', true);
+            });
         }
     };
 
