@@ -162,6 +162,20 @@
                 }
             }
         });
+
+        /**
+         * On use @ assets admin, reset pagination when going up a level
+         */
+        $('.ss-gridfield .list-parent-link').entwine({
+            onclick: function (e) {
+                // only add extra logic if sessionStorage is supported by browser
+                if(typeof(Storage) !== "undefined") {
+                    resetGridStatePagination();
+                }
+
+                this._super(e);
+            }
+        });
     });
 
     var resetGridStateFiltering = function() {
