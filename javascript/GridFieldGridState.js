@@ -88,6 +88,7 @@
                 if(typeof(Storage) !== "undefined") {
                     if(e.keyCode == '13') {
                         updateGridStateFiltering();
+                        return this._super(e);
                     }
                 }
 
