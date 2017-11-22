@@ -259,8 +259,9 @@
     var updateGridFieldMultiSelectState = function(savedState) {
         configKey = getConfigKey();
 
-        if (Object.keys(savedState[configKey]['GridFieldMultiSelect']).length > 0
-            && typeof savedState[configKey]['GridFieldMultiSelect'] !== 'undefined'
+        if (configKey &&
+            nestedIsDefined(savedState, configKey+'.GridFieldMultiSelect') &&
+            Object.keys(savedState[configKey]['GridFieldMultiSelect']).length > 0
         ) {
             Object.keys(savedState[configKey]['GridFieldMultiSelect']).forEach(function(key) {
                 $('input[name="'+savedState[configKey]['GridFieldMultiSelect'][key]+'"]')
@@ -396,4 +397,22 @@ if (!Object.keys) {
             return result;
         };
     }());
+}
+
+if (typeof window.nestedIsDefined === 'undefined') {
+    window.nestedIsDefined = function (obj) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        if (args.length === 1) {
+            args = args[0].split('.');
+        }
+
+        for (var i = 0; i < args.length; i++) {
+            if (!obj || !obj.hasOwnProperty(args[i])) {
+                return false;
+            }
+            obj = obj[args[i]];
+        }
+
+        return true;
+    };
 }
